@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Empleado;
 use Illuminate\Http\Request;
 
 class AlumnosController extends Controller
@@ -13,7 +13,8 @@ class AlumnosController extends Controller
      */
     public function index()
     {
-        return view('alumnos.index');
+        $empleados = Empleado::all();
+        return view('alumnos.index', compact('empleados')); 
     }
 
     /**
@@ -35,7 +36,15 @@ class AlumnosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombres'=>'required',
+            'apelidos'=>'required',
+            'telefono'=>'required',
+            'edad'=>'required'
+        ]);
+
+        Empleado::create($request->all());
+        return redirect()->route('alumnos.index')->with('Success','Empleado Guardado');
     }
 
     /**
@@ -44,9 +53,9 @@ class AlumnosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Empleado $empleado)
     {
-        //
+        return view('alumnos.show', compact('empleado'));
     }
 
     /**
